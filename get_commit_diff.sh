@@ -8,13 +8,17 @@
 	echo
 	exit 0
  fi
-
-patch_dir_name="kydpatch"
+ 
+Date=`date  +%Y%m%d`
+patch_dir_name=$1"Patch-"$Date
 mkdir -p "$patch_dir_name"
 echo "mkdir -p $patch_dir_name"
 
 git show $2 > $patch_dir_name"/"$1".diff"
-[ $? -ne 0 ] && rm $patch_dir_name -rf;exit 0
+if [ $? -ne 0 ] ;then
+	rm $patch_dir_name -rf
+	exit 0
+fi
 
 paths=`git show $2 --name-only |sed -n 7,99p`
 cd $patch_dir_name
@@ -30,4 +34,6 @@ do
 	cp   $path $patch_dir_name"/"$mpath
 	echo "cp "$path $patch_dir_name"/"$mpath
 done
+echo "******************************************************************"
 echo "Patch generated successfully!---->Directory name:$patch_dir_name"
+echo "******************************************************************"
